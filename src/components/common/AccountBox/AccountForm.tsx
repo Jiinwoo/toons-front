@@ -12,7 +12,6 @@ import { setAlert } from '@store/modules/alert';
 import useToken from '@hooks/useToken';
 import MobileForm from './MobileForm';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import _ from 'lodash';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { AxiosError } from 'axios';
@@ -65,7 +64,7 @@ function AccountForm({ forSignUp }: FormProps) {
       phoneNumber: '',
       code: '',
     },
-    mode: 'all',
+    mode: 'onBlur',
     resolver: yupResolver(formSchema),
   });
   const { errors } = methods.formState;
@@ -127,6 +126,16 @@ function AccountForm({ forSignUp }: FormProps) {
     [forSignUp, isMobileVerified, submitSignUpInfo, submitSignInInfo],
   );
 
+  const handlePasswordKeyPress = useCallback(
+    (e: React.KeyboardEvent) => {
+      // 패스워드 입력시 엔터누르면 바로 서브밋 하도록 변경
+      if (e.key === 'Enter') {
+        methods.handleSubmit(onSubmit)();
+      }
+    },
+    [methods, onSubmit],
+  );
+
   return (
     <FormProvider {...methods}>
       <Form
@@ -142,6 +151,7 @@ function AccountForm({ forSignUp }: FormProps) {
               label="Email"
               placeholder="Enter your email"
               autoComplete="email"
+              autoFocus
               required
               errorText={errors.email?.message}
               onChange={(e) => debounceChange(e, onChange)}
@@ -158,10 +168,8 @@ function AccountForm({ forSignUp }: FormProps) {
               label="Password"
               placeholder="Enter your password"
               autoComplete="current-password"
-              onChange={(e) => debounceChange(e, onChange)}
-              onKeyDown={(e) =>
-                e.code === 'Enter' && methods.handleSubmit(onSubmit)
-              }
+              onChange={onChange}
+              onKeyDown={handlePasswordKeyPress}
               required
               errorText={errors.password?.message}
             />
