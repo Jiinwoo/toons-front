@@ -4,6 +4,7 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { updateList } from '@store/modules/alarms';
 import { useQuery } from 'react-query';
 import { getAlarmListAPI } from '@apis/alarms';
+import { useEffect } from 'react';
 
 export const alarmListQuqeryKey = 'alarm-list';
 
@@ -15,7 +16,6 @@ function useAlarms() {
   const dispatch = useDispatch();
   const {
     user: { token },
-    alarms,
   } = useSelector((state: StoreState) => state, shallowEqual);
 
   const { data } = useQuery<AlarmItemResponseDTO[], unknown, AlarmItem[]>(
@@ -24,7 +24,7 @@ function useAlarms() {
     {
       enabled: !!token,
       select: (res) => {
-        const alarmList = res.map(({ id, webtoonDTO }) => ({
+        return res.map(({ id, webtoonDTO }) => ({
           ...webtoonDTO,
           thumbnail:
             webtoonDTO.platform === 'NAVER'
@@ -32,12 +32,17 @@ function useAlarms() {
               : webtoonDTO.thumbnail + '.webp',
           alarmId: id,
         }));
-        alarms.length === 0 && dispatch(updateList(alarmList));
-        return alarmList;
       },
       onError: (err) => console.log(err),
     },
   );
+
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+    dispatch(updateList(data));
+  }, [data]);
 
   return {
     data,
