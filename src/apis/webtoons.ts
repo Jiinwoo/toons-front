@@ -6,7 +6,7 @@ export type DayOfWeek = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDA
 
 export type Platform = 'NAVER' | 'KAKAO' | 'OTHER';
 
-interface WebtoonDto {
+export interface WebtoonDto {
     id: number;
     title: string;
     thumbnailUrl: string;

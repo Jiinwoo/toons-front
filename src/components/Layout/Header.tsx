@@ -1,5 +1,5 @@
 import {MenuOutlined} from "@ant-design/icons";
-import {Button, Layout as AntLayout, Menu, Tooltip} from "antd";
+import {Button, Layout as AntLayout, Menu, MenuProps, Tooltip} from "antd";
 import Logo from "../../assets/main-bg.svg?react";
 import {Link} from "react-router-dom";
 import useAuth from "../../hooks/useAuth.ts";
@@ -15,8 +15,33 @@ interface HeaderProps {
 
 const Header = ({showSider}: HeaderProps) => {
     const setLoginModal = useSetRecoilState(loginModalState);
-    const {isAuthenticated} = useAuth()
-    return <AntdHeader>
+    const {isAuthenticated, logout} = useAuth()
+    const menuItems: MenuProps["items"] = [
+        {
+            key: "home",
+            label: <Link to={"/posts"}>자유 게시판</Link>,
+        },
+        {
+            key: "2",
+            label: <Link to={"/webtoons"}>웹툰</Link>,
+        },
+        ...(isAuthenticated ?
+            [{
+                key: "3",
+                label: <Link to={"/profile"}>프로필</Link>
+            }, {
+                key: "4",
+                label: "로그아웃",
+                onClick: logout
+            }] :
+            [{
+                key: "3",
+                label: "로그인",
+                onClick: () => setLoginModal(true)
+            }])
+    ];
+
+    return <AntdHeader style={{padding: 0}}>
         <div style={{
             maxWidth: '1200px',
             margin: '0 auto',
@@ -40,25 +65,10 @@ const Header = ({showSider}: HeaderProps) => {
                 </Link>
 
             </div>
-            <Menu mode="horizontal" defaultSelectedKeys={['1']}>
-                <Menu.Item key="1">자유 게시판</Menu.Item>
-                <Menu.Item key="2">
-                    <Link to={"/webtoons"}>
-                        웹툰
-                    </Link>
-                </Menu.Item>
-                {isAuthenticated ?
-                    <Menu.Item key="3">
-                        <Link to={"/profile"}>
-                            프로필
-                        </Link>
-                    </Menu.Item>
-                    :
-                    <Menu.Item key="3" onClick={() => setLoginModal(true)}>
-                        로그인
-                    </Menu.Item>
-                }
-            </Menu>
+            <Menu mode="horizontal"
+                  defaultSelectedKeys={['1']}
+                  items={menuItems}
+            />
         </div>
     </AntdHeader>
 }

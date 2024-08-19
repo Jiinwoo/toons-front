@@ -14,9 +14,15 @@ export const googleLoginApi = async (idToken: string) => {
 }
 
 export const getMeApi = async (token: string)=> {
-    return (await axiosInstance.get<{name: string, id: number}>("/api/members/me", {
+    return (await axiosInstance.get<{name: string, id: number, provider: string}>("/api/members/me", {
         headers: {
             Authorization: `Bearer ${token}`
         }
+    })).data
+}
+
+export const requestVerificationApi = async (method: 'phone' | 'email') => {
+    return (await axiosInstance.post("/api/members/verification", {
+        method: method
     })).data
 }

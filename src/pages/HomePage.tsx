@@ -1,9 +1,17 @@
 import styled from "@emotion/styled";
-import {Card, Col, Row} from "antd";
+import {Avatar, Card, Col, List, Row} from "antd";
+import {useQuery} from "@tanstack/react-query";
+import {queryHomeApi} from "../apis/home.ts";
 
 function HomePage() {
+    const {data,} = useQuery({
+        queryKey: ["home"],
+        queryFn: queryHomeApi,
+    })
 
-
+    if (!data) {
+        return <div>Loading...</div>
+    }
 
     return (
         <MainContentsWrapper>
@@ -12,26 +20,49 @@ function HomePage() {
                     <Card
                         title="자유 게시판"
                         extra={<a href="#">More</a>}
+                        style={{height: "300px"}}
                     >
-                        <p>Card content</p>
-                        <p>Card content</p>
-                        <p>Card content</p>
+                        {data.hotPosts.map((post) => (
+                            <p key={post.id}>{post.title}</p>
+                        ))}
                     </Card>
                 </Col>
                 <Col span={12}>
-                    <Card title="완결 웹툰 목록" extra={<a href="#">More</a>}>
-                        <p>Card content</p>
-                        <p>Card content</p>
-                        <p>Card content</p>
+                    <Card title="완결 웹툰 목록" extra={<a href="#">More</a>}
+                          style={{height: "300px"}}
+                    >
+                        {data.completedWebtoons.map((webtoon) => (
+                            <>
+                                <p key={webtoon.id}>{webtoon.title}</p>
+                                <img alt={""} src={webtoon.thumbnailUrl}/>
+                            </>
+                        ))}
                     </Card>
                 </Col>
             </Row>
             <Row>
                 <Col span={24}>
                     <Card title="완결 대기 순위" extra={<a href="#">More</a>}>
-                        <p>Card content</p>
-                        <p>Card content</p>
-                        <p>Card content</p>
+                        <List
+                            dataSource={data.topAlarmWebtoons}
+                            renderItem={(webtoon) => (
+                                <List.Item key={webtoon.id}>
+                                    <List.Item.Meta
+                                        avatar={
+                                            <Avatar
+                                                size={64}
+                                                src={webtoon.thumbnailUrl}
+                                            />
+                                        }
+                                        // title={webtoon.title}
+                                    />
+                                    <List.Item.Meta
+                                        title={webtoon.title}
+                                    />
+
+                                </List.Item>
+                            )}
+                        />
                     </Card>
                 </Col>
             </Row>

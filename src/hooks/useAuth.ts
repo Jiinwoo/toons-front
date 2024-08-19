@@ -29,7 +29,9 @@ const authState = atom<{
 export const useAuth = () => {
     const [auth, setAuth] = useRecoilState(authState);
     const logout = useCallback(async () => {
+        localStorage.removeItem('token');
         setAuth({token: null});
+        // queryClient.invalidateQueries()
         queryClient.setQueryData(['user'], () => null,);
         queryClient.removeQueries({queryKey: ['user']});
     }, [setAuth]);
@@ -39,29 +41,20 @@ export const useAuth = () => {
         queryFn: () => getMeApi(auth.token!),
         enabled: !!auth.token,
         retry: false,
+        throwOnError: () => {
+            message.error('로그인이 필요합니다.');
+            logout()
+            return false
+        }
     });
 
     const login = useCallback(async (token: string) => {
         setAuth({token});
+        localStorage.setItem('token', token);
         await queryClient.invalidateQueries({queryKey: ['user']});
         message.success('로그인에 성공했습니다.');
 
     }, [setAuth])
-
-    useEffect(() => {
-        axiosInstance.interceptors.request.use(
-            (config) => {
-                if (auth.token !== null) {
-                    config.headers['Authorization'] = `Bearer ${auth.token}`;
-                }
-                return config;
-            },
-            (error) => {
-                return Promise.reject(error);
-            }
-        )
-    }, [auth.token]);
-
 
     return {
         user,
