@@ -1,10 +1,10 @@
-import { Form, Input, Select, Button, message } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import {Button, Form, Input, message, Select} from 'antd';
+import {useNavigate} from 'react-router-dom';
 import {FC} from "react";
 import {useCreatePostMutation} from "../hooks/usePost.ts";
-import {ContentType, ContentTypeObject, PostCreateDto} from "../apis/board.ts";
+import {ContentTypeObject, PostCreateDto} from "../apis/board.ts";
 
-const { Option } = Select;
+const {Option} = Select;
 
 const PostCreatePage: FC = () => {
     const [form] = Form.useForm();
@@ -30,15 +30,15 @@ const PostCreatePage: FC = () => {
                 form={form}
                 onFinish={onFinish}
                 layout="vertical"
-                style={{ maxWidth: '600px', margin: '0 auto' }}
+                style={{maxWidth: '600px', margin: '0 auto'}}
             >
-                <Form.Item name="title" label="Title" rules={[{ required: true }]}>
-                    <Input />
+                <Form.Item name="title" label="Title" rules={[{required: true}]}>
+                    <Input/>
                 </Form.Item>
-                <Form.Item name="content" label="Content" rules={[{ required: true }]}>
-                    <Input.TextArea rows={6} />
+                <Form.Item name="content" label="Content" rules={[{required: true}]}>
+                    <Input.TextArea rows={6}/>
                 </Form.Item>
-                <Form.Item name="contentType" label="Content Type" rules={[{ required: true }]}>
+                <Form.Item name="contentType" label="Content Type" rules={[{required: true}]}>
                     <Select>
                         {Object.values(ContentTypeObject).map((type) => (
                             <Option key={type} value={type}>{type}</Option>
@@ -55,7 +55,7 @@ const PostCreatePage: FC = () => {
                     <Button type="primary" htmlType="submit" loading={createPostMutation.isPending}>
                         Create Post
                     </Button>
-                    <Button onClick={() => navigate('/posts')} style={{ marginLeft: '10px' }}>
+                    <Button onClick={() => navigate('/posts')} style={{marginLeft: '10px'}}>
                         Cancel
                     </Button>
                 </Form.Item>

@@ -1,6 +1,6 @@
 import React from 'react';
-import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
-import {Button, List, Typography, Card, Space, Tag, message} from 'antd';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {Button, Card, List, message, Space, Tag, Typography} from 'antd';
 import {requestVerificationApi} from "../apis/auth.ts";
 import useAuth from "../hooks/useAuth.ts";
 import {deleteAlarmApi, getAlarmsApi} from "../apis/alarm.ts";

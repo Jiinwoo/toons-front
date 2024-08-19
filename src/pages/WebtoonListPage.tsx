@@ -7,15 +7,11 @@ import {getDayInKorean, getDayOfWeek, getPlatformColor} from "../utils/string.ts
 import {createAlarmApi, deleteAlarmApi, getAlarmsApi} from "../apis/alarm.ts";
 import useAuth from "../hooks/useAuth.ts";
 import {queryClient} from "../main.tsx";
-import {useSetRecoilState} from "recoil";
-import {loginModalState} from "../state/loginState.ts";
 
 const {Search} = Input;
 const {Option} = Select;
 
 const WebtoonListPage = () => {
-    const setLoginModal = useSetRecoilState(loginModalState)
-
     const [searchTitle, setSearchTitle] = useState('');
     const [selectedDays, setSelectedDays] = useState<string[]>([]);
     const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);

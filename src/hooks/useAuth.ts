@@ -1,10 +1,9 @@
 import {atom, useRecoilState} from "recoil";
 import {useQuery} from "@tanstack/react-query";
-import {useCallback, useEffect} from "react";
+import {useCallback} from "react";
 import {getMeApi} from "../apis/auth.ts";
 import {message} from "antd";
 import {queryClient} from "../main.tsx";
-import axiosInstance from "../apis/config.ts";
 
 const authState = atom<{
     token: string | null;

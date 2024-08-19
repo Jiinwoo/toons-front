@@ -1,5 +1,5 @@
 import {usePostsQuery} from "../hooks/usePost.ts";
-import {Button, Card, List, Spin, Table, Tag} from "antd";
+import {Button, Spin, Table, Tag} from "antd";
 import {Link, useNavigate} from "react-router-dom";
 import {FC} from "react";
 import {PostDto} from "../apis/board.ts";
@@ -49,7 +49,7 @@ const PostListPage: FC = () => {
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
                 <h1>Posts</h1>
                 <Button type="primary" onClick={() => {
-                    if(!isAuthenticated) {
+                    if (!isAuthenticated) {
                         setLoginModal(true)
                         return
                     }

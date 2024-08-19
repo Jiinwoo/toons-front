@@ -3,7 +3,6 @@ import HomePage from "./pages/HomePage.tsx";
 import Layout from "./components/Layout";
 import useAuth from "./hooks/useAuth.ts";
 import WebtoonListPage from "./pages/WebtoonListPage.tsx";
-import BoardList from "./pages/BoardList.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import PostListPage from "./pages/PostListPage.tsx";
 import PostCreatePage from "./pages/PostCreatePage.tsx";
@@ -42,7 +41,7 @@ const appRoutes = createBrowserRouter([
             },
             {
                 path: "/posts/:postId",
-                element: <PostDetailPage />
+                element: <PostDetailPage/>
             },
             {
                 path: "/webtoons",

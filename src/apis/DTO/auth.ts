@@ -1,41 +1,42 @@
 export interface SignUpRequestDTO {
-  email: string;
-  password: string;
-  username: string;
-  phoneNumber: string;
+    email: string;
+    password: string;
+    username: string;
+    phoneNumber: string;
 }
 
 export interface SignInRequestDTO {
-  email: string;
-  password: string;
+    email: string;
+    password: string;
 }
 
 export interface SignInResponseDTO {
-  token: string;
+    token: string;
 }
 
 export interface UpdateUserRequestDTO {
-  email: string;
-  username: string;
-  phoneNumber: string;
+    email: string;
+    username: string;
+    phoneNumber: string;
 }
+
 export interface Token {
-  email: string;
-  exp: number;
-  iat: number;
+    email: string;
+    exp: number;
+    iat: number;
 }
 
 export interface MobileVerificationRequestDTO {
-  phoneNumber: string;
+    phoneNumber: string;
 }
 
 export interface MobileVerificationCheckDTO
-  extends MobileVerificationRequestDTO {
-  code: string;
+    extends MobileVerificationRequestDTO {
+    code: string;
 }
 
 export interface UserInfo {
-  username: string;
-  email: string;
-  phoneNumber: string;
+    username: string;
+    email: string;
+    phoneNumber: string;
 }

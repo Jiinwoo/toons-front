@@ -1,7 +1,7 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {getPostApi, PostUpdateDto, updatePostApi} from "../apis/board.ts";
-import {Button, Card, Form, FormProps, Input, message, Space, Spin, Typography} from "antd";
+import {Button, Card, Form, FormProps, Input, message, Space, Spin} from "antd";
 import styled from "@emotion/styled";
 import {css} from "@emotion/react";
 

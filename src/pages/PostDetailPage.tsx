@@ -1,7 +1,7 @@
-import {useParams, useNavigate,} from 'react-router-dom';
-import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
-import {Button, Card, message, Spin, Typography, Form, Input, Space, Row, Col, Divider, Tag} from 'antd';
-import {LikeOutlined, EditOutlined, DeleteOutlined, LeftOutlined, LikeFilled} from '@ant-design/icons';
+import {useNavigate, useParams,} from 'react-router-dom';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {Button, Card, Divider, message, Space, Spin, Tag, Typography} from 'antd';
+import {DeleteOutlined, EditOutlined, LeftOutlined, LikeFilled, LikeOutlined} from '@ant-design/icons';
 import styled from "@emotion/styled";
 import useAuth from "../hooks/useAuth.ts";
 import {deletePostApi, getPostApi, likePostApi, unlikePostApi} from "../apis/board.ts";
@@ -27,11 +27,6 @@ const StyledMeta = styled.div`
 const StyledContent = styled(Paragraph)`
     font-size: 16px;
     line-height: 1.6;
-`;
-
-const StyledForm = styled(Form)`
-    max-width: 600px;
-    margin: 0 auto;
 `;
 
 // API 함수들 (이전과 동일)
@@ -78,12 +73,12 @@ export const PostDetailPage: React.FC = () => {
 
     const LikeButton = () => (
         <Button
-            icon={post.isLiked ? <LikeFilled /> : <LikeOutlined />}
+            icon={post.isLiked ? <LikeFilled/> : <LikeOutlined/>}
             onClick={() => {
                 if (post.isLiked === null) {
                     return;
                 }
-                post.isLiked ? unLikeMutation.mutate(parseInt(postId!))  : likeMutation.mutate(parseInt(postId!));
+                post.isLiked ? unLikeMutation.mutate(parseInt(postId!)) : likeMutation.mutate(parseInt(postId!));
             }}
             type={post.isLiked ? "primary" : "default"}
         >
@@ -94,10 +89,12 @@ export const PostDetailPage: React.FC = () => {
     return (
         <StyledCard
             actions={[
-                <Button icon={<LeftOutlined />} onClick={() => navigate('/posts')}>목록으로</Button>,
-                <LikeButton />,
-                isAuthor && <Button icon={<EditOutlined />} onClick={() => navigate(`/posts/${postId}/edit`)}>수정</Button>,
-                isAuthor && <Button icon={<DeleteOutlined />} danger onClick={() => deleteMutation.mutate(postId!)}>삭제</Button>
+                <Button icon={<LeftOutlined/>} onClick={() => navigate('/posts')}>목록으로</Button>,
+                <LikeButton/>,
+                isAuthor &&
+                <Button icon={<EditOutlined/>} onClick={() => navigate(`/posts/${postId}/edit`)}>수정</Button>,
+                isAuthor &&
+                <Button icon={<DeleteOutlined/>} danger onClick={() => deleteMutation.mutate(parseInt(postId!))}>삭제</Button>
             ].filter(Boolean)}
         >
             <StyledTitle level={2}>{post.title}</StyledTitle>

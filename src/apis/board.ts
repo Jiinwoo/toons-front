@@ -1,5 +1,5 @@
 import axiosInstance from "./config.ts";
-import {Page, Pageable} from "./common.ts";
+import {Page} from "./common.ts";
 
 export interface PostDto {
     id: number;
@@ -58,7 +58,7 @@ export const createPostApi = async (post: PostCreateDto) => {
     return response.data;
 };
 
-export const updatePostApi = async ({id, post}: {id: number, post: PostUpdateDto}) => {
+export const updatePostApi = async ({id, post}: { id: number, post: PostUpdateDto }) => {
     const response = await axiosInstance.put<number>(`/api/posts/${id}`, post);
     return response.data;
 };

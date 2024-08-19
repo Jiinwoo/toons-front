@@ -2,7 +2,7 @@ import {Col, Layout, Row, Space} from 'antd';
 import {GithubOutlined, InstagramOutlined, TwitterOutlined} from '@ant-design/icons';
 import styled from '@emotion/styled';
 
-const { Footer } = Layout;
+const {Footer} = Layout;
 
 const StyledFooter = styled(Footer)`
     background-color: #001529;
@@ -36,13 +36,13 @@ const CustomFooter = () => {
                         <Space direction="vertical" size="large">
                             <Space>
                                 <SocialIcon href="https://github.com" target="_blank" rel="noopener noreferrer">
-                                    <GithubOutlined />
+                                    <GithubOutlined/>
                                 </SocialIcon>
                                 <SocialIcon href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-                                    <TwitterOutlined />
+                                    <TwitterOutlined/>
                                 </SocialIcon>
                                 <SocialIcon href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-                                    <InstagramOutlined />
+                                    <InstagramOutlined/>
                                 </SocialIcon>
                             </Space>
                             <p>© {currentYear} 웹툰 완결 알리미. All Rights Reserved.</p>

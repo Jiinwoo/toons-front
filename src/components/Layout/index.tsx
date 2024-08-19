@@ -43,21 +43,21 @@ const Layout = () => {
     );
     return (
         <>
-        <AntLayout>
-            <Drawer
-                placement="left"
-                closable={false}
-                onClose={onClose}
-                open={siderVisible}
-            >
-                <SideContent/>
-            </Drawer>
-            <Header showSider={showSider}/>
-            <Content>
-                <Outlet/>
-            </Content>
-            <CustomFooter/>
-        </AntLayout>
+            <AntLayout>
+                <Drawer
+                    placement="left"
+                    closable={false}
+                    onClose={onClose}
+                    open={siderVisible}
+                >
+                    <SideContent/>
+                </Drawer>
+                <Header showSider={showSider}/>
+                <Content>
+                    <Outlet/>
+                </Content>
+                <CustomFooter/>
+            </AntLayout>
             <LoginModal/>
         </>
     );

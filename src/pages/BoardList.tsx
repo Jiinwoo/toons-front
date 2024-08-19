@@ -1,4 +1,3 @@
-
 const BoardList = () => {
     return (
         <div>
