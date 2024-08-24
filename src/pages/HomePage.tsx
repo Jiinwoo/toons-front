@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import {Avatar, Card, Col, List, Row} from "antd";
 import {useQuery} from "@tanstack/react-query";
 import {queryHomeApi} from "../apis/home.ts";
+import {Link} from "react-router-dom";
 
 function HomePage() {
     const {data,} = useQuery({
@@ -19,7 +20,7 @@ function HomePage() {
                 <Col span={12}>
                     <Card
                         title="자유 게시판"
-                        extra={<a href="#">More</a>}
+                        extra={<Link to={"/posts"}>More</Link>}
                         style={{height: "300px"}}
                     >
                         {data.hotPosts.map((post) => (
@@ -28,21 +29,21 @@ function HomePage() {
                     </Card>
                 </Col>
                 <Col span={12}>
-                    <Card title="완결 웹툰 목록" extra={<a href="#">More</a>}
+                    <Card title="완결 웹툰 목록" extra={<Link to={"/webtoons"}>More</Link>}
                           style={{height: "300px"}}
                     >
                         {data.completedWebtoons.map((webtoon) => (
-                            <>
+                            <div style={{display: 'flex', justifyContent: 'space-between'}}>
                                 <p key={webtoon.id}>{webtoon.title}</p>
-                                <img alt={""} src={webtoon.thumbnailUrl}/>
-                            </>
+                                <img style={{width: 64, height: 64}} alt={""} src={webtoon.thumbnailUrl}/>
+                            </div>
                         ))}
                     </Card>
                 </Col>
             </Row>
             <Row>
                 <Col span={24}>
-                    <Card title="완결 대기 순위" extra={<a href="#">More</a>}>
+                    <Card title="완결 대기 순위" extra={<Link to={"/webtoons"}>More</Link>}>
                         <List
                             dataSource={data.topAlarmWebtoons}
                             renderItem={(webtoon) => (

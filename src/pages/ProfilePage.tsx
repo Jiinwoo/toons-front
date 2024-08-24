@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {Button, Card, List, message, Space, Tag, Typography} from 'antd';
-import {requestVerificationApi} from "../apis/auth.ts";
+import {Button, Card, Input, List, message, Space, Tag, Typography} from 'antd';
+import {requestVerificationApi, subscribeApi, unsubscribeApi} from "../apis/auth.ts";
 import useAuth from "../hooks/useAuth.ts";
 import {deleteAlarmApi, getAlarmsApi} from "../apis/alarm.ts";
 import {getPlatformColor} from "../utils/string.ts";
@@ -12,19 +12,37 @@ const ProfilePage: React.FC = () => {
     const queryClient = useQueryClient();
     const {user, isLoading} = useAuth()
 
+    const [email, setEmail] = useState("")
+
     const {data: alarms, isLoading: isAlarmLoading} = useQuery({
         queryKey: ['alarmWebtoons'],
         queryFn: getAlarmsApi,
     });
 
+    const unsubscribeMutation = useMutation({
+        mutationFn: unsubscribeApi,
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ['user']})
+            message.success('알림이 성공적으로 해지되었습니다.')
+        }
+    })
+
+    const subscribeMutation = useMutation({
+        mutationFn: subscribeApi,
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ['user']})
+            message.success('알림이 성공적으로 등록되었습니다.')
+        }
+    })
+
     const verificationMutation = useMutation({
         mutationFn: requestVerificationApi,
         onSuccess: () => {
-            queryClient.invalidateQueries({queryKey: ['userProfile']});
-            message.success('인증 요청이 성공적으로 전송되었습니다.');
+            queryClient.invalidateQueries({queryKey: ['user']});
+            message.success('인증 메일이 발송되었습니다.');
         },
         onError: (error) => {
-            message.error('인증 요청 중 오류가 발생했습니다.');
+            message.error('인증 메일 발송 중 오류가 발생했습니다.');
             console.error('Verification error:', error);
         },
     });
@@ -41,13 +59,19 @@ const ProfilePage: React.FC = () => {
         },
     });
 
-    const handleVerification = (method: 'phone' | 'email') => {
-        verificationMutation.mutate(method);
+    const handleVerification = () => {
+        verificationMutation.mutate(email);
     };
 
     const handleRemoveAlarm = (webtoonId: number) => {
         removeAlarmMutation.mutate(webtoonId);
     };
+
+    useEffect(() => {
+        if (user?.verifiedEmail) {
+            setEmail(user.verifiedEmail)
+        }
+    }, [user])
 
     if (isAlarmLoading || isLoading) {
         return <div>Loading...</div>;
@@ -63,6 +87,11 @@ const ProfilePage: React.FC = () => {
                 <div>
                     <Title level={4}>기본 정보</Title>
                     <Text>이름: {user.name}</Text>
+
+                    {user.verifiedEmail && <>
+                        <br/>
+                        <Text>인증된 이메일: {user.verifiedEmail}</Text>
+                    </>}
                     <br/>
                     <Text>로그인 제공자: {user.provider}</Text>
                 </div>
@@ -70,25 +99,38 @@ const ProfilePage: React.FC = () => {
                 <div>
                     <Title level={4}>알림 설정</Title>
                     <Space>
+                        <Input
+                            disabled={verificationMutation.isPending || user.verifiedEmail !== null}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="이메일 주소"
+                            style={{width: 200}}
+                        />
                         <Button
-                            onClick={() => handleVerification('phone')}
-                            // disabled={profile.isPhoneVerified || verificationMutation.isPending}
-                            loading={verificationMutation.isPending && verificationMutation.variables === 'phone'}
+                            onClick={() => handleVerification()}
+                            disabled={verificationMutation.isPending || user.verifiedEmail !== null}
+                            loading={verificationMutation.isPending}
                         >
-                            {/*{profile.isPhoneVerified ? '전화번호 인증됨' : '전화번호 인증'}*/}
+                            {user.verifiedEmail ? '인증 완료됨' : '인증 요청'}
                         </Button>
-                        <Button
-                            onClick={() => handleVerification('email')}
-                            // disabled={profile.isEmailVerified || verificationMutation.isPending}
-                            loading={verificationMutation.isPending && verificationMutation.variables === 'email'}
-                        >
-                            {/*{profile.isEmailVerified ? '이메일 인증됨' : '이메일 인증'}*/}
-                        </Button>
+
+                        {user.subscribe ? (
+                            <Button
+                                onClick={() => unsubscribeMutation.mutate()}
+                                loading={unsubscribeMutation.isPending}
+                            >
+                                구독 해지하기
+                            </Button>
+                        ) : (
+                            <Button
+                                disabled={user.verifiedEmail === null}
+                                onClick={() => subscribeMutation.mutate()}
+                                loading={subscribeMutation.isPending}
+                            >
+                                구독 하기
+                            </Button>
+                        )}
                     </Space>
-                    <br/>
-                    <Text>
-                        {/*선호하는 알림 방법: {profile.preferredAlarmMethod || '설정되지 않음'}*/}
-                    </Text>
                 </div>
 
                 <div>

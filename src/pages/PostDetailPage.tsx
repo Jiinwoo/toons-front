@@ -94,7 +94,8 @@ export const PostDetailPage: React.FC = () => {
                 isAuthor &&
                 <Button icon={<EditOutlined/>} onClick={() => navigate(`/posts/${postId}/edit`)}>수정</Button>,
                 isAuthor &&
-                <Button icon={<DeleteOutlined/>} danger onClick={() => deleteMutation.mutate(parseInt(postId!))}>삭제</Button>
+                <Button icon={<DeleteOutlined/>} danger
+                        onClick={() => deleteMutation.mutate(parseInt(postId!))}>삭제</Button>
             ].filter(Boolean)}
         >
             <StyledTitle level={2}>{post.title}</StyledTitle>
