@@ -5,6 +5,7 @@ interface HomeDto {
     hotPosts: {
         id: number
         title: string
+        likeCount: number
     }[],
     completedWebtoons: WebtoonDto[],
     topAlarmWebtoons: WebtoonDto[],
