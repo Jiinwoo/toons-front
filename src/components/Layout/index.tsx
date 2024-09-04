@@ -5,6 +5,7 @@ import {useState} from "react";
 import CustomFooter from "./FooterContent.tsx";
 import Header from "./Header.tsx";
 import LoginModal from "../LoginModal.tsx";
+import styled from "@emotion/styled";
 
 const {Content} = AntLayout;
 
@@ -54,7 +55,9 @@ const Layout = () => {
                 </Drawer>
                 <Header showSider={showSider}/>
                 <Content>
-                    <Outlet/>
+                    <MainContentsWrapper>
+                        <Outlet/>
+                    </MainContentsWrapper>
                 </Content>
                 <CustomFooter/>
             </AntLayout>
@@ -62,5 +65,20 @@ const Layout = () => {
         </>
     );
 }
+
+const MainContentsWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    margin: 32px auto 16px;
+    max-width: 1200px;
+    min-height: calc(100vh - 64px - 70px);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    overflow: initial;
+    background-color: #f5f5f5;
+`;
+
 
 export default Layout;

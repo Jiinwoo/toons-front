@@ -47,7 +47,7 @@ const PostListPage: FC = () => {
     return (
         <div className="post-list-page">
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
-                <h1>Posts</h1>
+                <h1>글 목록</h1>
                 <Button type="primary" onClick={() => {
                     if (!isAuthenticated) {
                         setLoginModal(true)

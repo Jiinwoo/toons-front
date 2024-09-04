@@ -6,7 +6,7 @@ import styled from "@emotion/styled";
 import useAuth from "../hooks/useAuth.ts";
 import {deletePostApi, getPostApi, likePostApi, unlikePostApi} from "../apis/board.ts";
 
-const {Title, Text, Paragraph} = Typography;
+const {Title, Text} = Typography;
 
 // Styled components
 const StyledCard = styled(Card)`
@@ -24,11 +24,6 @@ const StyledMeta = styled.div`
     color: rgba(0, 0, 0, 0.45);
 `;
 
-const StyledContent = styled(Paragraph)`
-    font-size: 16px;
-    line-height: 1.6;
-`;
-
 // API 함수들 (이전과 동일)
 
 // PostDetailPage 컴포넌트
@@ -36,7 +31,7 @@ export const PostDetailPage: React.FC = () => {
     const {postId} = useParams<{ postId: string }>();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const {user, isAuthenticated} = useAuth();
+    const {user, isAuthenticated} = useAuth()
 
     const {data: post, isLoading, error} = useQuery(
         {queryKey: ['post', postId, isAuthenticated], queryFn: () => getPostApi(parseInt(postId!)), enabled: !!postId},
@@ -65,9 +60,13 @@ export const PostDetailPage: React.FC = () => {
         },
     });
 
+
     if (isLoading) return <Spin size="large" style={{display: 'block', margin: '20px auto'}}/>;
     if (error) return <StyledCard><Text type="danger">에러가 발생했습니다.</Text></StyledCard>;
     if (!post) return null;
+    // const sanitizedData = () => ({
+    //     __html: window.DOMPurify.sanitize(data)
+    // })
 
     const isAuthor = user?.name === post.username;
 
@@ -106,7 +105,16 @@ export const PostDetailPage: React.FC = () => {
                     {post.tag && <Tag color="blue">{post.tag}</Tag>}
                 </Space>
             </StyledMeta>
-            <StyledContent>{post.content}</StyledContent>
+            {post &&
+                <div
+                    style={{
+                        fontSize: '16px',
+                        lineHeight: 1.6,
+                        minHeight: '300px',
+                    }}
+                    dangerouslySetInnerHTML={{__html: post.content}}/>
+            }
+
         </StyledCard>
     );
 };

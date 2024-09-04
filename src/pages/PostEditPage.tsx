@@ -1,9 +1,11 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import {getPostApi, PostUpdateDto, updatePostApi} from "../apis/board.ts";
-import {Button, Card, Form, FormProps, Input, message, Space, Spin} from "antd";
+import {ContentType, getPostApi, PostUpdateDto, updatePostApi} from "../apis/board.ts";
+import {Button, Card, Col, Form, FormProps, Input, message, Row, Select, Space, Spin} from "antd";
 import styled from "@emotion/styled";
 import {css} from "@emotion/react";
+import {useQuill} from "react-quilljs";
+import {useEffect, useState} from "react";
 
 // Styled components
 const StyledCard = styled(Card)`
@@ -16,10 +18,35 @@ const formCss = css`
     max-width: 600px;
     margin: 0 auto;
 `;
+
+type AntdFormDto = {
+    title: string
+};
+
+const firstTag = [
+    {
+        value: "GENERAL",
+        label: "일반"
+    },
+    {
+        value: "WEBTOON",
+        label: "웹툰"
+    },
+    {
+        value: "WEBNOVEL",
+        label: "웹소설"
+    }
+] as const
+
+
 const PostEditPage: React.FC = () => {
     const {postId} = useParams<{ postId: string }>();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+
+    const {quillRef, quill} = useQuill()
+
+    const [subject, setSubject] = useState<ContentType>("GENERAL")
 
     const {data: post, isLoading} = useQuery({
         queryKey: ['post', postId],
@@ -40,35 +67,77 @@ const PostEditPage: React.FC = () => {
         },
     });
 
-    const onFinish: FormProps<PostUpdateDto>['onFinish'] = (values) => {
-        updateMutation.mutate(values);
+    const onFinish: FormProps<AntdFormDto>['onFinish'] = (values) => {
+        updateMutation.mutate({
+            title: values.title,
+            content: quill?.root.innerHTML || "",
+            contentType: subject,
+        });
     };
+
+    useEffect(() => {
+        if (quill && post) {
+            quill.clipboard.dangerouslyPasteHTML(post.content)
+        }
+    }, [post, post?.content, quill])
 
     if (isLoading) return <Spin size="large" style={{display: 'block', margin: '20px auto'}}/>;
     if (!post) return null;
 
     return (
         <StyledCard title="게시글 수정">
-            <Form<PostUpdateDto>
+            <Form<AntdFormDto>
                 css={formCss}
                 initialValues={{
                     title: post.title,
-                    content: post.content,
-                    contentType: 'GENERAL',  // 예시로 'TEXT'로 설정
                 }}
                 onFinish={onFinish}
                 // onFinish={onFinish}
                 layout="vertical"
             >
-                <Form.Item<PostUpdateDto> name="title" label="제목" rules={[{required: true, message: '제목을 입력해주세요.'}]}>
-                    <Input size="large"/>
-                </Form.Item>
-                <Form.Item<PostUpdateDto> name="content" label="내용" rules={[{required: true, message: '내용을 입력해주세요.'}]}>
-                    <Input.TextArea rows={6}/>
-                </Form.Item>
-                <Form.Item<PostUpdateDto> name="contentType" hidden>
-                    <Input/>
-                </Form.Item>
+                <Row gutter={16} align="middle">
+                    <Col flex="0 1 100px">
+                        <Form.Item
+                            name="contentType"
+                            label="태그"
+                            // rules={[{required: true}]}
+                            style={{marginBottom: 0}}
+                        >
+                            <Select<ContentType>
+                                style={{width: '100%'}}
+                                defaultValue={"GENERAL"}
+                                onChange={(value) => setSubject(value)}
+                                options={
+                                    firstTag.map((contentType) => ({
+                                        label: contentType.label,
+                                        value: contentType.value,
+                                        disabled: contentType.value !== "GENERAL"
+                                    }))
+                                }
+                            />
+                        </Form.Item>
+                    </Col>
+                    <Col flex="1 1 auto">
+                        <Form.Item
+                            name="title"
+                            label="제목"
+                            rules={[{required: true}]}
+                            style={{marginBottom: 0}}
+                        >
+                            <Input/>
+                        </Form.Item>
+                    </Col>
+                </Row>
+                {/*<Form.Item<AntdFormDto> name="title" label="제목" rules={[{required: true, message: '제목을 입력해주세요.'}]}>*/}
+                {/*    <Input size="large"/>*/}
+                {/*</Form.Item>*/}
+                <div
+                    ref={quillRef}
+                    style={{width: '100%', height: 300}}>
+                </div>
+                {/*<Form.Item<AntdFormDto> name="contentType" hidden>*/}
+                {/*    <Input/>*/}
+                {/*</Form.Item>*/}
                 <Form.Item>
                     <Space>
                         <Button type="primary" htmlType="submit" size="large">수정</Button>

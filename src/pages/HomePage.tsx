@@ -1,4 +1,3 @@
-import styled from "@emotion/styled";
 import {Avatar, Card, Col, List, Row, Space} from "antd";
 import {useQuery} from "@tanstack/react-query";
 import {queryHomeApi} from "../apis/home.ts";
@@ -16,7 +15,7 @@ function HomePage() {
     }
 
     return (
-        <MainContentsWrapper>
+        <>
             <Row>
                 <Col xs={24} sm={12}>
                     <Card
@@ -101,27 +100,9 @@ function HomePage() {
                     </Card>
                 </Col>
             </Row>
-            {/*<MainBanner/>*/}
-            {/*<MainContentsWrapper className="wrapper">*/}
-            {/*    /!*<WebtoonListSection />*!/*/}
-            {/*</MainContentsWrapper>*/}
-        </MainContentsWrapper>
+        </>
 
     );
 }
-
-const MainContentsWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-    margin: 32px auto 16px;
-    max-width: 1200px;
-    min-height: calc(100vh - 64px - 70px);
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    overflow: initial;
-    background-color: #f5f5f5;
-`;
 
 export default HomePage;
